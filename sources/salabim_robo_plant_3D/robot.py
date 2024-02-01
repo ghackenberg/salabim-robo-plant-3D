@@ -1,19 +1,39 @@
-import math
-
 from salabim import Component, Animate3dSphere, Animate3dBar
 
 from .vector import Vector
 
 class Robot(Component):
-    def __init__(self, position: Vector):
+    def setup(self, position: Vector):
         
         # Constants
 
-        self.position = position
+        self.positions = [
+            position,
+            Vector(0, 0, 1),
+            Vector(0, 0, 1)
+        ]
 
-        # Joints
+        # Axes
 
-        self.joints = list(
+        self.axes = [
+            Vector(0, 0, 1),
+            Vector(1, 0, 0),
+            Vector(1, 0, 0),
+        ]
+
+        # Angles
+
+        self.angles_source = [0, 0, 0]
+        self.angles_target = [0, 0, 0]
+
+        # Times
+
+        self.time_source = self.env.now()
+        self.time_target = self.env.now()
+
+        # Spheres
+
+        self.spheres = list(
             map(
                 lambda i: Animate3dSphere(
                     x=lambda t: self.calculate_joint_x_world(i, t),
@@ -26,9 +46,9 @@ class Robot(Component):
             )
         )
         
-        # Bodies
+        # Bars
 
-        self.bodies = list(
+        self.bars = list(
             map(
                 lambda i: Animate3dBar(
                     x0=lambda t: self.calculate_joint_x_world(i + 0, t),
@@ -45,10 +65,10 @@ class Robot(Component):
         )
     
     def calculate_joint_x_world(self, i: int, time: float):
-        return self.position.x
+        return self.positions[0].x
 
     def calculate_joint_y_world(self, i: int, time: float):
-        return self.position.y
+        return self.positions[0].y
 
     def calculate_joint_z_world(self, i: int, time: float):
-        return self.position.z + i * 0.5
+        return self.positions[0].z + i * 0.5

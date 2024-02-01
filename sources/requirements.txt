@@ -1,0 +1,4 @@
+salabim
+
+pyopengl
+pyopengl_accelerate
